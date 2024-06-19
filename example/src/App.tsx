@@ -12,7 +12,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text style={styles.result}>Result:: {result}</Text>
     </View>
   );
 }
@@ -27,5 +27,10 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     marginVertical: 20,
+  },
+  result: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'green',
   },
 });

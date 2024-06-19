@@ -1,4 +1,9 @@
-import { NativeModules, Platform } from 'react-native';
+import {
+  NativeEventEmitter,
+  NativeModules,
+  Platform,
+  type EmitterSubscription,
+} from 'react-native';
 
 const LINKING_ERROR =
   `The package 'react-native-performance-monitor' doesn't seem to be linked. Make sure: \n\n` +
@@ -16,7 +21,26 @@ const PerformanceMonitor = NativeModules.PerformanceMonitor
         },
       }
     );
+const performanceMonitorEmitter = new NativeEventEmitter(PerformanceMonitor);
+let subscription: EmitterSubscription | null = null;
 
-export function multiply(a: number, b: number): Promise<number> {
-  return PerformanceMonitor.multiply(a, b);
-}
+const startMonitoring = (callback: (data: any) => void) => {
+  if (subscription) {
+    return;
+  }
+  subscription = performanceMonitorEmitter.addListener(
+    'performanceData',
+    callback
+  );
+  PerformanceMonitor.startMonitoring();
+};
+
+const stopMonitoring = () => {
+  if (subscription) {
+    subscription.remove();
+    subscription = null;
+    PerformanceMonitor.stopMonitoring();
+  }
+};
+
+export { startMonitoring, stopMonitoring };

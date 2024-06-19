@@ -4,9 +4,14 @@
 
 @interface PerformanceMonitor : NSObject <NativePerformanceMonitorSpec>
 #else
+#import <React/RCTEventEmitter.h>
 #import <React/RCTBridgeModule.h>
 
-@interface PerformanceMonitor : NSObject <RCTBridgeModule>
+typedef enum EventType {
+  PerformanceData
+} EventType;
+
+@interface PerformanceMonitor : RCTEventEmitter <RCTBridgeModule>
 #endif
 
 @end
