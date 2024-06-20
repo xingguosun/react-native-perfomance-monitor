@@ -4,6 +4,7 @@ import {
   Platform,
   type EmitterSubscription,
 } from 'react-native';
+import type { PerformanceData, StartMonitoringCallback } from '../type';
 
 const LINKING_ERROR =
   `The package 'react-native-performance-monitor' doesn't seem to be linked. Make sure: \n\n` +
@@ -23,8 +24,7 @@ const PerformanceMonitor = NativeModules.PerformanceMonitor
     );
 const performanceMonitorEmitter = new NativeEventEmitter(PerformanceMonitor);
 let subscription: EmitterSubscription | null = null;
-
-const startMonitoring = (callback: (data: any) => void) => {
+const startMonitoring = (callback: StartMonitoringCallback) => {
   if (subscription) {
     return;
   }
@@ -32,15 +32,14 @@ const startMonitoring = (callback: (data: any) => void) => {
     'performanceData',
     callback
   );
-  PerformanceMonitor.startMonitoring();
 };
 
 const stopMonitoring = () => {
   if (subscription) {
     subscription.remove();
     subscription = null;
-    PerformanceMonitor.stopMonitoring();
   }
 };
 
 export { startMonitoring, stopMonitoring };
+export type { PerformanceData };

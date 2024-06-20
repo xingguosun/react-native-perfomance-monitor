@@ -1,18 +1,31 @@
-import * as React from 'react';
+import React from 'react';
+import { useEffect, useState } from 'react';
 
 import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-performance-monitor';
+import {
+  startMonitoring,
+  stopMonitoring,
+  type PerformanceData,
+} from 'react-native-performance-monitor';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const [performanceData, setPerformanceData] = useState<PerformanceData>();
 
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
+  useEffect(() => {
+    startMonitoring((data) => {
+      setPerformanceData(data);
+    });
+
+    return () => {
+      stopMonitoring();
+    };
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.result}>Result:: {result}</Text>
+      <Text style={styles.result}>
+        {performanceData ? JSON.stringify(performanceData) : 'No data'}
+      </Text>
     </View>
   );
 }
@@ -29,7 +42,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   result: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     color: 'green',
   },
