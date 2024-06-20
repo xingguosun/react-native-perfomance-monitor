@@ -5,17 +5,31 @@ Get memory, CPU usage and FPS
 ## Installation
 
 ```sh
-npm install react-native-performance-monitor
+npm install @panda-tool/react-native-performance-monitor
 ```
 
 ## Usage
 
 ```js
-import { multiply } from 'react-native-performance-monitor';
+import {
+    startMonitoring,
+    stopMonitoring,
+    type PerformanceData,
+} from '@panda-tool/react-native-performance-monitor';
 
 // ...
 
-const result = await multiply(3, 7);
+const [performanceData, setPerformanceData] = useState<PerformanceData>();
+
+useEffect(() => {
+startMonitoring((data) => {
+    setPerformanceData(data);
+});
+
+return () => {
+    stopMonitoring();
+};
+}, []);
 ```
 
 ## Contributing
